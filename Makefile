@@ -5,7 +5,8 @@ CXXFLAGS = -Wall -Werror -Wextra  -std=c++98
 SRCS = 	src/main.cpp \
 		src/location.cpp \
 		src/ServerConfig.cpp \
-		src/ConfigParser.cpp
+		src/ConfigParser.cpp \
+		src/ServerManager.cpp
 
 OBJS =  $(SRCS:.cpp=.o)
 

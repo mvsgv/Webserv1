@@ -1,5 +1,6 @@
 #include "../includes/inc.hpp"
 #include "../includes/ConfigParser.hpp"
+#include "../includes/ServerManager.hpp"
 #include <vector>
 
 static void	printServers(const ConfigParser &parser)
@@ -44,6 +45,10 @@ int main(int argc, char **argv){
     try {
         ConfigParser parser(res);
         printServers(parser);
+
+        ServerManager server(parser.getServers());
+        server.setup();
+        server.run();
     } catch(const std::exception& e) {
         std::cerr << "Fatal Error: " << e.what() << '\n';
         return 1;
