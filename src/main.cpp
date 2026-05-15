@@ -1,6 +1,8 @@
-#include "../includes/inc.hpp"
+#include "../includes/Client.hpp"
+#include "../includes/location.hpp"
 #include "../includes/ConfigParser.hpp"
 #include "../includes/ServerManager.hpp"
+#include "../includes/ServerConfig.hpp"
 #include <vector>
 
 static void	printServers(const ConfigParser &parser)

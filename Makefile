@@ -1,24 +1,29 @@
-NAME	= webserv
-CXX		= c++ 
-CXXFLAGS = -Wall -Werror -Wextra  -std=c++98
+NAME    = webserv
+CXX     = c++
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
-SRCS = 	src/main.cpp \
-		src/location.cpp \
-		src/ServerConfig.cpp \
-		src/ConfigParser.cpp \
-		src/ServerManager.cpp
+SRCS =  src/main.cpp \
+        src/location.cpp \
+        src/ServerConfig.cpp \
+        src/ConfigParser.cpp \
+        src/ServerManager.cpp \
+        src/Client.cpp
 
-OBJS =  $(SRCS:.cpp=.o)
+OBJS =  $(SRCS:src/%.cpp=obj/%.o)
 
 all : $(NAME)
 
 $(NAME) : $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
 
-clean:
-	rm -f $(OBJS)
+obj/%.o: src/%.cpp
+	@mkdir -p obj
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-fclean:
+clean:
+	rm -rf obj
+
+fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
