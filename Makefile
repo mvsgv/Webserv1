@@ -7,7 +7,8 @@ SRCS =  src/main.cpp \
         src/ServerConfig.cpp \
         src/ConfigParser.cpp \
         src/ServerManager.cpp \
-        src/Client.cpp
+        src/Client.cpp \
+		src/HTTPRequest.cpp
 
 OBJS =  $(SRCS:src/%.cpp=obj/%.o)
 
