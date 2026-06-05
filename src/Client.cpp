@@ -62,3 +62,6 @@ const std::string &Client::getWriteRequest()const{
 void Client::clearWriteRequest(){
     _writeRequest.clear();
 }
+const std::string &Client::getReadRequest() const {
+    return _readRequest;
+}

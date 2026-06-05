@@ -21,4 +21,5 @@ class Client{
         const std::string &getWriteRequest()const;
         void clearWriteRequest();
         bool appendreadRequest(const char *buff, ssize_t bytes);
+        const std::string &getReadRequest() const;
 };

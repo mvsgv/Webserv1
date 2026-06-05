@@ -1,59 +1,123 @@
-#include "../includes/HTTPRequest.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   HTTPRequest.cpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mariamevissargova <mariamevissargova@st    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/21 14:39:09 by stephen           #+#    #+#             */
+/*   Updated: 2026/06/05 16:17:56 by mariameviss      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-HTTPRequest::HTTPRequest(const std::string &raw_request){
-    std::istringstream stream(raw_request);
-    std::string line;
+#include "../includes/HttpRequest.hpp"
 
-    //Reading line request -> ex GET /index.html ....
-    if (std::getline(stream, line) && !line.empty()){
-        if (line[line.size() - 1] == '\r') line.erase(line.size() - 1);
-        parseRequest(line);
-    }
-    //Lire les headers
-    parseHeader(stream);
+bool HttpRequest::parse(const std::string& rawRequest){
+	//first line
+	size_t	eol = 0;
+	std::string	line = gnl_req(rawRequest, eol);
 
-    //Lecture du body -> apres \r\n\r\n
-    size_t body = raw_request.find("\r\n\r\n");
-    if (body != std::string::npos){
-        _body = raw_request.substr(body + 4);
-    }
+	std::stringstream	elems(line);
+	elems >> this->method >> this->uri >> this->version;
+	if(this->check_empty())
+		return false;
+	//headers
+	while (eol != std::string::npos)
+	{
+		size_t sep;
+		line = gnl_req(rawRequest, eol);	//new
+		if(line == "\r\n")
+			break;
+		sep = line.find(':');
+		if (sep == std::string::npos)
+			return false;
+		//put some exceptions to look good maybe ?
+		std::string key = line.substr(0, sep);
+		std::string value = line.substr(sep + 1);
+		if (!value.empty() && value[0] == ' ')
+			value.erase(0, 1);
+		this->headers[key] = value;
+	}
+	this->body = rawRequest.substr(eol, rawRequest.size() - eol);
+	//put some exceptions to look good maybe ?
+	//deeper check needed like valid method (only 3 here),...
+	return true;
 }
 
-HTTPRequest::~HTTPRequest(){}
-
-void   HTTPRequest::parseRequest(const std::string &line){
-    std::istringstream linestr(line);
-    linestr >> _method >> _uri >> _version;
+bool HttpRequest::check_empty(){
+	if(this->method.empty() || this->uri.empty() || this->version.empty())
+		return true;
+	return false;
 }
 
-void   HTTPRequest::parseHeader(std::istringstream &stream){
-    std::string line;
-    while(getline(stream, line) && line != "\r"){
-        size_t separator = line.find(":");
-        if (separator != std::string::npos){
-            std::string head = line.substr(0, separator);
-            std::string value = line.substr(separator + 1);
-            if (!value.empty() && value[0] == ' ')
-            value.erase(0, 1);
-            _headers[head] = value;
-        }
-    }
+std::string gnl_req(const std::string &rawRequest, size_t &eol){	//new
+
+	size_t n_eol = rawRequest.find("\r\n", eol);
+	if (n_eol == std::string::npos)
+	{
+		eol = std::string::npos;
+		return "";
+	}
+	else if (n_eol == eol)
+	{
+		eol = n_eol + 2;
+		return "\r\n";
+	}
+	std::string line = rawRequest.substr(eol, n_eol - eol);
+	eol = n_eol + 2;
+
+	return line;
 }
 
+// bool HttpRequest::parse(const std::string& rawRequest){
+// 	//first line
+// 	size_t	eol = 0;
+// 	std::string	line = gnl_req(rawRequest, eol);
 
-/*Dans une std::map, chaque élément est une paire :
-std::pair<const std::string, std::string>
-avec :
-first  -> clé
-second -> valeur
-Exemple : ("Host", "localhost:8080")*/
-std::string HTTPRequest::getMethod()const{ return _method; }
-std::string HTTPRequest::getUri()const{ return _uri; }
-std::string HTTPRequest::getVesion()const{ return _version; } 
-std::string HTTPRequest::getBody()const{ return _body; }
-std::string HTTPRequest::getHeader(const std::string &key)const{
-    std::map<std::string, std::string>::const_iterator it = _headers.find(key);
-    if (it != _headers.end())
+// 	std::stringstream	elems(line);
+// 	elems >> this->method >> this->uri >> this->version;
+
+// 	//headers
+// 	eol +=2;
+// 	size_t	n_eol = eol;
+// 	while (n_eol != std::string::npos)
+// 	{
+// 		size_t sep;
+// 		n_eol = rawRequest.find("\r\n", eol);
+// 		line = rawRequest.substr(eol, n_eol - eol);
+// 		if(line.empty())
+// 			break;
+// 		sep = line.find(':');
+// 		if (sep == std::string::npos)
+// 			return false;
+// 		//put some exceptions to look good maybe ?
+// 		std::string key = line.substr(0, sep);
+// 		// std::string value = line.substr(sep + 2, line.size());
+// 		std::string value = line.substr(sep + 1); //see if not better than manually trimming spaces as above
+// 		if (!value.empty() && value[0] == ' ')
+// 			value.erase(0, 1);
+// 		this->headers[key] = value;
+// 		n_eol +=2;
+// 		eol = n_eol;
+// 	}
+// 	if(!line.empty() && (n_eol != std::string::npos))
+// 	{
+
+// 	}
+// 	if(this->check_empty())
+// 		return false;
+// 	//put some exceptions to look good maybe ?
+// 	//deeper check needed like valid method (only 3 here),...
+// 	return true;
+// }
+
+const std::string& HttpRequest::getMethod()const{ return method; }
+const std::string& HttpRequest::getUri()const{ return uri; }
+const std::string& HttpRequest::getVersion()const{ return version; } 
+const std::string& HttpRequest::getBody()const{ return body; }
+std::string HttpRequest::getHeader(const std::string &key)const{
+    std::map<std::string, std::string>::const_iterator it = headers.find(key);
+    if (it != headers.end())
         return it->second;
     return "";
 }

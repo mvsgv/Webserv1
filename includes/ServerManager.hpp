@@ -8,6 +8,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "Client.hpp"
+#include "Router.hpp"
+#include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
 
 class ServerManager{
     private:

@@ -161,10 +161,19 @@ void ServerManager::run(){
             
                 // Si la requête HTTP est entièrement reçue
                 if (myClient.isRequestComplete()){
-                    // Préparation sommaire d'une réponse  : a remplacer plus tard par un vrai moteur http
-                    std::string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n\r\nHello Webserv";
-                    myClient.setWriteRequest(response);
-
+                    // 1. On parse la requête brute du client
+                    HttpRequest request;
+                    if (!request.parse(myClient.getReadRequest())) {
+                        HttpResponse response = errorResponse(400); // Bad Request
+                        myClient.setWriteRequest(response.buildResponse());
+                    } else {
+                        // 2. On donne la requête au routeur de votre mate
+                        Router router;
+                        // Attention: Le routeur aura besoin de connaître la vraie Config (ServerConfig / location)
+                        HttpResponse response = router.route(request);
+                        // 3. On stocke la string brute dans le buffer d'écriture du client
+                        myClient.setWriteRequest(response.buildResponse());
+                    }
                     // On bascule la surveillance du client de LECTURE vers ÉCRITURE
                     _pollfds[i].events = POLLOUT; //demande a ecouter la disponibilite pour ecrire
                     }
@@ -205,4 +214,4 @@ struct pollfd {
     short events;      Événements attendus(ce que je veux savoir, previens moi quand t as les donnes)
     short revents;     Événements détectés(ce qui s'est reelement passe)
     
-    POLLIN = Il y a des données en attente de lecture. */
+    POLLIN = Il y a des données en attente de lecture. */ 
