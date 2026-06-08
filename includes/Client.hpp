@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "HttpRequest.hpp"
 #include <sys/types.h>
 class Client{
     private:

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   HTTPRequest.cpp                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mariamevissargova <mariamevissargova@st    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/21 14:39:09 by stephen           #+#    #+#             */
-/*   Updated: 2026/06/05 16:17:56 by mariameviss      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/HttpRequest.hpp"
 
 bool HttpRequest::parse(const std::string& rawRequest){

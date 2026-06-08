@@ -1,17 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Router.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mariamevissargova <mariamevissargova@st    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/31 14:08:18 by stephen           #+#    #+#             */
-/*   Updated: 2026/06/05 16:22:18 by mariameviss      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/Router.hpp"
-#include "../includes/cgi.hpp"
+#include "../includes/CgiHandler.hpp"
 
 HttpResponse Router::route(const HttpRequest& request)	//new
 {
@@ -36,13 +24,11 @@ HttpResponse handleGet(const HttpRequest& request)	//new
 	if(request.getUri() == "/")
 		path = "www/index.html";	//default page
 	else
-		path = "www" + request.getUri();		//will need to update bc uri not always = path
+		path = "www" + request.getUri();
 	if (path.find(".py") != std::string::npos) {
         CgiHandler cgi;
-        response.body = cgi.executeCGI(path);
+        response.body = cgi.executeCGI(request, path);
         response.statusCode = 200;
-        // Si votre script Python renvoie déjà "Content-type: text/html\n\n", 
-        // ca s'ajoutera au corps . classique en CGI basique.
         return response;
 }
 		int fd = open(path.c_str(), O_RDONLY);
@@ -71,7 +57,7 @@ HttpResponse handlePost(const HttpRequest& request){	//new
 		path = "www" + request.getUri();
 	if (path.find(".py") != std::string::npos) {
         CgiHandler cgi;
-        response.body = cgi.executeCGI(path);
+        response.body = cgi.executeCGI(request, path);
         response.statusCode = 200;
         return response;
 	}

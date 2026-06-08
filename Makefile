@@ -11,7 +11,7 @@ SRCS =  src/main.cpp \
 		src/HttpRequest.cpp \
 		src/HttpResponse.cpp \
 		src/Router.cpp \
-		src/cgi.cpp
+		src/CgiHandler.cpp
 
 OBJS =  $(SRCS:src/%.cpp=obj/%.o)
 

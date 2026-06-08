@@ -1,4 +1,4 @@
-#include "../includes/cgi.hpp"
+#include "../includes/CgiHandler.hpp"
 #include <fcntl.h>
 #include <cstring>
 #include <ctime>

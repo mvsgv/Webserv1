@@ -15,6 +15,7 @@
 # include "HttpRequest.hpp"
 # include "ServerConfig.hpp"
 # include <fcntl.h>
+# include <cstdio>
 # include <unistd.h>
 
 class Router{	//new

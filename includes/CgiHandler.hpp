@@ -31,7 +31,6 @@ public:
     CgiHandler();
     ~CgiHandler();
 
-    // Execute CGI script non-blocking style (returns immediately with pid)
     // Stores process info internally
     pid_t executeCGI(const HttpRequest& request, const std::string& script_path);
     

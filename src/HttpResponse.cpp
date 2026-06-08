@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   HttpResponse.cpp                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mariamevissargova <mariamevissargova@st    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/22 15:01:22 by stephen           #+#    #+#             */
-/*   Updated: 2026/06/05 16:18:17 by mariameviss      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/HttpResponse.hpp"
 
 std::string HttpResponse::buildResponse(){

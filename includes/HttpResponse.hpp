@@ -15,8 +15,6 @@
 # include <sstream>
 # include <map>
 
-//this will produce final raw string that the future server will send with send() through the socket
-//add some getters to make things pretty
 class HttpResponse{
 private:
 
@@ -25,7 +23,6 @@ public:
 	std::map<std::string, std::string> headers;
 	std::string body;	//new
 	std::string buildResponse();
-	//wouldn't the responsse need a version member too ?
 };
 
 std::string itostr(size_t n);
