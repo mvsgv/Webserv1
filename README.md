@@ -25,7 +25,7 @@ It usually has a flow where the Client machine makes a request to the Server mac
 
 HTTP consists of requests and responses. When a client (such as a web browser) wants to retrieve a webpage from a server, it sends an HTTP request to the server. The server then processes the request and sends back an HTTP response.
 
-https://miro.medium.com/v2/resize:fit:720/format:webp/1*KeNok_6MOjeFdlgH3LJuVQ.png
+![alt text](http-message-anatomy(1).png)
 
 HTTP Request Methods
 
