@@ -25,7 +25,7 @@ It usually has a flow where the Client machine makes a request to the Server mac
 
 HTTP consists of requests and responses. When a client (such as a web browser) wants to retrieve a webpage from a server, it sends an HTTP request to the server. The server then processes the request and sends back an HTTP response.
 
-![alt text](https://mdn.github.io/shared-assets/images/diagrams/http/messages/http-message-anatomy.svg)
+![alt text](http-message-anatomy(1).png)
 
 HTTP Request Methods
 
@@ -83,7 +83,7 @@ HTTP response status codes are issued by a server in response to a client's requ
 Socket
 
 HTTP communication usually takes place over TCP. A typical HTTP session often consists of three steps: The client and server establish a TCP connection stream, the client sends HTTP request over TCP connection, and then the server processes that request and sends back a reply. The second and third step can be repeated any number of times, until both client and server decide to close the underlying TCP connection. To put it in a simple diagram, this is how the process looks like in the perspective of TCP.
-![alt text](sockets.png)
+![alt text](https://camo.githubusercontent.com/94bb4c4642cceac8ca1a835c57e54c2a2bacd902db5f19eaf01b98d384e05e47/68747470733a2f2f646c2e64726f70626f782e636f6d2f73636c2f66692f766c66736431787073657630337a3271396a30676c2f736f636b65742e706e673f726c6b65793d697565656a717a6b7230737471613271326d32377978356a7726646c3d30)
 To create a server you need to follow this steps:
 
     Create a socket and listen for new connections.
