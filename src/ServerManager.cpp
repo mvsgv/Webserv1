@@ -35,7 +35,6 @@ int ServerManager::createSocket(const ServerConfig &server){
     address.sin_addr.s_addr = INADDR_ANY; // 0.0.0.0 -> j'accepte les connexions partout ->j'ecoute partout
     address.sin_port = htons(server.getPort()); // Host TO Network Short -> port défini par la config
 
-    //BIND -> attach socket to the local address
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0){
         close(server_fd); // Clean up on error
         throw std::runtime_error("Error: bind failed");
@@ -106,21 +105,21 @@ void ServerManager::run(){
                 client_pfd.events = POLLIN;
                 client_pfd.revents = 0;
                 _pollfds.push_back(client_pfd);
+                
                 std::cout << "Client connected: "<< client_fd << std::endl;
                 } 
                 else{
-                char buff[4096]; //pour lire ce que je vais recevoir
+                char buff[4096];
                 std::memset(buff, 0, sizeof(buff));
                 ssize_t b_read = recv(current_fd, buff, sizeof(buff), 0);
                 if (b_read <= 0){
                     std::cout << "Client disconnected: " <<  current_fd << std::endl;
                     close(current_fd);
                     _clients.erase(current_fd);
-                    _pollfds.erase(_pollfds.begin());
+                    _pollfds.erase(_pollfds.begin() + i);
             }
             else {
                 Client &myClient = _clients.at(current_fd);
-                // VERIFICATION DE SECURITE OBLIGATOIRE
                 if (myClient.appendreadRequest(buff, b_read) == false) {
                     std::cout << "Rejet 413 : Payload Trop Large" << std::endl;
                     std::string error413 = "HTTP/1.1 413 Payload Too Large\r\nContent-Type: text/plain\r\nContent-Length: 21\r\nConnection: close\r\n\r\n413 Payload Too Large";
@@ -151,7 +150,8 @@ void ServerManager::run(){
                 int current_fd = _pollfds[i].fd;
                 Client &myClient = _clients.at(current_fd);
                 const std::string &response = myClient.getWriteRequest();
-
+                std::cerr << "FINAL RESPONSE:\n" << response << std::endl;
+                std::cerr << "FINAL BODY SIZE = " << response.size() << std::endl;
                 ssize_t b_sent = send(current_fd, response.c_str(), response.length(), 0);
                 if (b_sent <= 0){
                     std::cout << "Send error or client disconnected : " << current_fd << std::endl;

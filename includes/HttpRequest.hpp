@@ -21,8 +21,8 @@ public:
     const std::string& getVersion() const;
     const std::string& getBody() const;
     std::string getHeader(const std::string& key) const;
-    // std::map<std::string, std::string> getHeaders() const;
-    // std::string getQueryString() const;
+    std::map<std::string, std::string> getHeaders() const;
+    std::string getQueryString() const;
 };
 
 std::string gnl_req(const std::string &rawRequest, size_t &eol);

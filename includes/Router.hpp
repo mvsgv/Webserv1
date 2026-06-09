@@ -18,10 +18,9 @@
 # include <cstdio>
 # include <unistd.h>
 
-class Router{	//new
-private:
-public:
-	HttpResponse route(const HttpRequest& req);
+class Router{
+	public:
+		HttpResponse route(const HttpRequest& req);
 };
 
 HttpResponse handleGet(const HttpRequest& request);

@@ -1,7 +1,7 @@
 NAME    = webserv
 CXX     = c++
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98
-
+CXXFLAGS += -fsanitize=address -g -O0
+LDFLAGS += -fsanitize=address
 SRCS =  src/main.cpp \
         src/location.cpp \
         src/ServerConfig.cpp \

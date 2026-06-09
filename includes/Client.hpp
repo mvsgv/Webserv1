@@ -23,4 +23,6 @@ class Client{
         void clearWriteRequest();
         bool appendreadRequest(const char *buff, ssize_t bytes);
         const std::string &getReadRequest() const;
+        pid_t cgi_pid;
+        bool has_cgi;
 };

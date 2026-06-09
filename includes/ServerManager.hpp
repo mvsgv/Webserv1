@@ -26,6 +26,5 @@ class ServerManager{
         void setup();
         void run();
         
-        //registre de tout les clients connectes
         std::map<int, Client> _clients;
 };

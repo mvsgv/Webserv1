@@ -24,8 +24,6 @@ int Client::getFd()const{
     return _fd;
 }
 
-//On ajoute une marge arbitraire sécurisée d'environ 8 Ko (8192 octets) 
-//pour tolérer la taille des en-têtes HTTP de la requête brute
 bool Client::appendreadRequest(const char *buff, ssize_t bytes){
     if (bytes > 0){
         if (_readRequest.size() + bytes > _maxBodySize + 8192){
@@ -35,12 +33,10 @@ bool Client::appendreadRequest(const char *buff, ssize_t bytes){
     }
     return true;
 }
- //chercher la sequence de caracter \r\n pour etre sur que c est la fin de la requette
- //si la sequence est trouvee je retourne true
+
 bool Client::isRequestComplete() const {
     size_t head_end = _readRequest.find("\r\n\r\n");
 
-    // Si les en-têtes ne sont pas encore complètement reçus
     if (head_end == std::string::npos)
         return false;
 

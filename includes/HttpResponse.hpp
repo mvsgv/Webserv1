@@ -16,16 +16,17 @@
 # include <map>
 
 class HttpResponse{
-private:
+	public:
+		int statusCode;
+		std::map<std::string, std::string> headers;
+		std::string body;	//new
+		std::string buildResponse();
 
-public:
-	int statusCode;
-	std::map<std::string, std::string> headers;
-	std::string body;	//new
-	std::string buildResponse();
+		HttpResponse();
+		~HttpResponse();
 };
 
-std::string itostr(size_t n);
+
 std::string status_message(int code);
 //Code	Meaning
 // 200	OK

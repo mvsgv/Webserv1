@@ -2,10 +2,10 @@
 
 std::string ConfigParser::parseValue(std::istringstream &iss, const std::string &word){
     std::string value;
-    if (!(iss >> value)) // verifier que jai une valeur dedans
+    if (!(iss >> value)) 
         throw std::runtime_error("Error: missing argument for '" + word + "'");
     bool semicolon = false;
-    if(!value.empty() && value[value.size() - 1] == ';'){ // ; attache a la valeur ou pas 8080;
+    if(!value.empty() && value[value.size() - 1] == ';'){ 
         value.erase(value.size() - 1);
         semicolon = true;
     }
@@ -39,14 +39,14 @@ void    ConfigParser::parseLocation(std::ifstream &file, location &l){
             bool methadd = false;
             
             while (!semicolon && (iss >> method)){
-                if (method == ";"){// ';' separe par la meth
+                if (method == ";"){
                     semicolon = true;
                     break;
                 }
             
             }
             if (!method.empty() && method[method.size() - 1] == ';'){
-                method.erase(method.size() - 1); // ';' est attache
+                method.erase(method.size() - 1); 
                 semicolon = true;
             }
             if (method != "GET" && method != "DELETE" && method != "POST"){
