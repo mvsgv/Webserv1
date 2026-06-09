@@ -45,5 +45,6 @@ std::string status_message(int code){
         return "Bad Gateway";
     else if (code == 504)
         return "Gateway Timeout";
-	return "Unknown";
+    else
+    	return "Unknown";
 }

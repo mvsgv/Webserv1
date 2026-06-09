@@ -150,8 +150,6 @@ void ServerManager::run(){
                 int current_fd = _pollfds[i].fd;
                 Client &myClient = _clients.at(current_fd);
                 const std::string &response = myClient.getWriteRequest();
-                std::cerr << "FINAL RESPONSE:\n" << response << std::endl;
-                std::cerr << "FINAL BODY SIZE = " << response.size() << std::endl;
                 ssize_t b_sent = send(current_fd, response.c_str(), response.length(), 0);
                 if (b_sent <= 0){
                     std::cout << "Send error or client disconnected : " << current_fd << std::endl;
