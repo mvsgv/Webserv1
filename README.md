@@ -28,13 +28,6 @@ HTTP consists of requests and responses. When a client (such as a web browser) w
 ![alt text](https://mdn.github.io/shared-assets/images/diagrams/http/messages/http-message-anatomy.svg)
 
 HTTP Request Methods
-
-    GET: A request method that requests only the resource itself, without requesting changes to anything on the server.
-    POST: A method of request to create a new resource by sending data to the server.
-    DELETE: It is a request method to delete a specific data on the server.
-
-HTTP Requests
-
 HTTP requests are made by a client to request an action on a resource identified by a URI (Uniform Resource Identifier). There are several types of HTTP requests, each designed for specific actions:
 
     GET: Requests data from a specified resource.
@@ -42,7 +35,6 @@ HTTP requests are made by a client to request an action on a resource identified
     DELETE: Deletes a specified resource.
 
 HTTP Response Status Codes
-
 HTTP response status codes are issued by a server in response to a client's request made to the server. These codes are divided into five categories:
 1xx: Informational
 
