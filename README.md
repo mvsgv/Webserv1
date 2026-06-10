@@ -39,11 +39,7 @@ HTTP requests are made by a client to request an action on a resource identified
 
     GET: Requests data from a specified resource.
     POST: Submits data to be processed to a specified resource.
-    PUT: Updates a specified resource with the data provided.
     DELETE: Deletes a specified resource.
-    HEAD: Similar to GET, but it requests only the headers and status line, not the body of the response.
-    PATCH: Applies partial modifications to a resource.
-    OPTIONS: Returns the HTTP methods that the server supports for a specific URL.
 
 HTTP Response Status Codes
 
