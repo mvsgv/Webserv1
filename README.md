@@ -1,143 +1,265 @@
-*This project has been created as part of the 42 curriculum by mavissar, scesar.*
+*This project has been created as part of the 42 curriculum by **mavissar** and **scesar**.*
 
 # Webserv
 
 ## Description
-**Webserv** is a custom-built HTTP/1.1 server written from scratch in C++98. The goal of this project is to dive deep into network programming, socket management, and the HTTP protocol by recreating the core functionalities of a web server like NGINX. 
 
-This server is entirely non-blocking and relies on a single I/O multiplexing system (e.g., `poll()`, `select()`, or `epoll()`) to handle concurrent client connections securely and efficiently. It parses a configuration file, manages multiple virtual servers on different ports or hostnames, serves static files, and executes dynamic content via Common Gateway Interface (CGI).
+**Webserv** is a custom-built HTTP/1.1 server written from scratch in **C++98**. The goal of this project is to dive deep into network programming, socket management, and the HTTP protocol by recreating the core functionalities of a web server such as NGINX.
 
-### Key Features
-* **I/O Multiplexing:** Capable of handling hundreds of simultaneous connections without hanging or crashing, using a single main loop.
-* **HTTP Methods:** Full support for `GET`, `POST`, and `DELETE` requests.
-* **Configuration Parsing:** Reads and validates an NGINX-style `.conf` file to configure routes, ports, hostnames, default pages, and error pages.
-* **CGI Execution:** Dynamically executes scripts (e.g., Python, PHP) based on file extensions, passing the correct environment variables and handling timeouts.
-* **Upload & File Management:** Capable of handling file uploads and physical deletions safely.
-* **Resilience:** Strict memory leak management and robust error handling to prevent server crashes under heavy load or malformed requests.
+This server is entirely non-blocking and relies on a single I/O multiplexing mechanism (`poll()`, `select()`, or equivalent) to handle multiple client connections efficiently and securely. It parses a configuration file, manages multiple virtual servers on different ports or hostnames, serves static files, and executes dynamic content through CGI.
 
 ---
-### Introduction
-## HTTP 
 
-Hypertext Transfer Protocol is a protocol in the application layer of the OSI reference model and is used for data transfer between networks.
+## Features
 
-It usually has a flow where the Client machine makes a request to the Server machine and receives a response at the end of this request. When browsing websites, the person browsing the site is called the Client and the structure that provides the content of the site is called the Server.
+* **I/O Multiplexing:** Handles multiple simultaneous connections without blocking.
+* **HTTP Methods:** Supports `GET`, `POST`, and `DELETE`.
+* **Configuration Parsing:** Reads and validates an NGINX-style configuration file.
+* **CGI Execution:** Executes dynamic scripts (Python, PHP, etc.) with proper environment variables and timeout handling.
+* **File Uploads:** Supports file uploads through `POST` requests.
+* **File Deletion:** Supports resource deletion through `DELETE` requests.
+* **Error Handling:** Robust handling of malformed requests and unexpected situations.
+* **Memory Safety:** Designed to avoid memory leaks and crashes.
 
-HTTP consists of requests and responses. When a client (such as a web browser) wants to retrieve a webpage from a server, it sends an HTTP request to the server. The server then processes the request and sends back an HTTP response.
+---
 
-![alt text](https://mdn.github.io/shared-assets/images/diagrams/http/messages/http-message-anatomy.svg)
+# Architecture
 
-HTTP Request Methods
+## HTTP
 
-    GET: A request method that requests only the resource itself, without requesting changes to anything on the server.
-    POST: A method of request to create a new resource by sending data to the server.
-    DELETE: It is a request method to delete a specific data on the server.
+The **Hypertext Transfer Protocol (HTTP)** is an application-layer protocol used for communication between clients and servers.
 
-HTTP Requests
+When browsing a website, the browser acts as the **client**, sending requests to a **server**, which processes them and returns responses.
 
-HTTP requests are made by a client to request an action on a resource identified by a URI (Uniform Resource Identifier). There are several types of HTTP requests, each designed for specific actions:
+HTTP communication is based on a request-response model:
 
-HTTP Response Status Codes
+1. The client sends an HTTP request.
+2. The server processes the request.
+3. The server returns an HTTP response.
 
-HTTP response status codes are issued by a server in response to a client's request made to the server. These codes are divided into five categories:
-1xx: Informational
+![HTTP Message Anatomy](https://mdn.github.io/shared-assets/images/diagrams/http/messages/http-message-anatomy.svg)
 
-    100 Continue: The server has received the request headers, and the client should proceed to send the request body.
+### Supported HTTP Methods
 
-2xx: Success
+#### GET
 
-    200 OK: The request has succeeded. The information returned with the response depends on the method used in the request.
-    201 Created: The request has been fulfilled, leading to the creation of a new resource.
-    202 Accepted: The request has been accepted for processing, but the processing has not been completed.
-    204 No Content: The server successfully processed the request but is not returning any content.
+Requests a resource from the server without modifying it.
 
-3xx: Redirection
+```http
+GET /index.html HTTP/1.1
+```
 
-    301 Moved Permanently: The URL of the requested resource has been changed permanently. The new URL is given in the response.
-    302 Found: Indicates that the resource is temporarily under a different URI.
-    304 Not Modified: Indicates that the resource has not been modified since the last request.
+#### POST
 
-4xx: Client Error
+Sends data to the server, usually to create or update a resource.
 
-    400 Bad Request: The server cannot or will not process the request due to an apparent client error (e.g., malformed request syntax).
-    401 Unauthorized: Authentication is required and has failed or has not yet been provided.
-    403 Forbidden: The server understood the request but refuses to authorize it.
-    404 Not Found: The requested resource could not be found but may be available in the future.
-    405 Method Not Allowed: A request method is not supported for the requested resource.
+```http
+POST /upload HTTP/1.1
+```
 
-5xx: Server Error
+#### DELETE
 
-    500 Internal Server Error: A generic error message, given when an unexpected condition was encountered and no more specific message is suitable.
-    501 Not Implemented: The server either does not recognize the request method, or it lacks the ability to fulfill the request.
-    503 Service Unavailable: The server is currently unavailable (because it is overloaded or down for maintenance).
+Requests the deletion of a resource.
 
-## SERVER
-Socket
+```http
+DELETE /file.txt HTTP/1.1
+```
 
-HTTP communication usually takes place over TCP. A typical HTTP session often consists of three steps: The client and server establish a TCP connection stream, the client sends HTTP request over TCP connection, and then the server processes that request and sends back a reply. The second and third step can be repeated any number of times, until both client and server decide to close the underlying TCP connection. To put it in a simple diagram, this is how the process looks like in the perspective of TCP.
-![alt text](https://camo.githubusercontent.com/94bb4c4642cceac8ca1a835c57e54c2a2bacd902db5f19eaf01b98d384e05e47/68747470733a2f2f646c2e64726f70626f782e636f6d2f73636c2f66692f766c66736431787073657630337a3271396a30676c2f736f636b65742e706e673f726c6b65793d697565656a717a6b7230737471613271326d32377978356a7726646c3d30)
-To create a server you need to follow this steps:
+### Common HTTP Status Codes
 
-    Create a socket and listen for new connections.
-    Accept incoming client connections.
-    Receive messages, process them and sends some responses to the client. This is where HTTP message exchange happens.
-    When one party wants to close the connection, it will do that by sending an EOF character and closing the socket file descriptor.
+#### 2xx — Success
+
+| Code | Meaning    |
+| ---- | ---------- |
+| 200  | OK         |
+| 201  | Created    |
+| 202  | Accepted   |
+| 204  | No Content |
+
+#### 3xx — Redirection
+
+| Code | Meaning           |
+| ---- | ----------------- |
+| 301  | Moved Permanently |
+| 302  | Found             |
+| 304  | Not Modified      |
+
+#### 4xx — Client Errors
+
+| Code | Meaning            |
+| ---- | ------------------ |
+| 400  | Bad Request        |
+| 401  | Unauthorized       |
+| 403  | Forbidden          |
+| 404  | Not Found          |
+| 405  | Method Not Allowed |
+
+#### 5xx — Server Errors
+
+| Code | Meaning               |
+| ---- | --------------------- |
+| 500  | Internal Server Error |
+| 501  | Not Implemented       |
+| 503  | Service Unavailable   |
+
+---
+
+## Server & Sockets
+
+HTTP communication generally uses **TCP sockets**.
+
+A typical HTTP session follows these steps:
+
+1. The server creates a socket and starts listening.
+2. The client establishes a TCP connection.
+3. The client sends an HTTP request.
+4. The server processes the request.
+5. The server sends an HTTP response.
+6. The connection is closed or reused.
+
+![TCP Socket Communication](https://camo.githubusercontent.com/94bb4c4642cceac8ca1a835c57e54c2a2bacd902db5f19eaf01b98d384e05e47/68747470733a2f2f646c2e64726f70626f782e636f6d2f73636c2f66692f766c66736431787073657630337a3271396a30676c2f736f636b65742e706e673f726c6b65793d697565656a717a6b7230737471613271326d32377978356a7726646c3d30)
+
+### Server Workflow
+
+```text
+Create Socket
+      ↓
+Bind Port
+      ↓
+Listen
+      ↓
+Accept Connections
+      ↓
+Receive Requests
+      ↓
+Process Requests
+      ↓
+Send Responses
+      ↓
+Close Connection
+```
+
+---
 
 ## CGI
-CGI (Common Gateway Interface) is a way for web servers and server-side programs to interact. CGI is completely independent of programming language, operating system and web server. Currently it is the most common server-side programming technique and it's also supported by almost every web server in existence. Moreover, all servers implement it in (nearly) the same way, so that you can make a CGI script for one server and then distribute it to be run on any web server.
 
-The server needs a way to know which URLs map to scripts and which URLs just map to ordinary HTML files. For my CGI i start by creating CGI directories on the server. This is done in the server setup and tells the server that all files in a cgi-bin directory are CGI scripts to be executed when requested. so one can tell that URLs like this: http://localhost/cgi-bin/anim.js point to a CGI script.
-## Instructions
+**CGI (Common Gateway Interface)** allows a web server to execute external programs and return their output as HTTP responses.
 
-### Prerequisites
-* A Unix-like operating system (Linux/macOS)
+CGI is independent of:
+
+* Programming language
+* Operating system
+* Web server implementation
+
+For this project, CGI execution is configured through dedicated routes such as:
+
+```text
+/cgi-bin/script.py
+/cgi-bin/script.php
+```
+
+When such a resource is requested:
+
+1. The server detects the CGI route.
+2. The script is executed in a child process.
+3. Environment variables are prepared.
+4. The script output is captured.
+5. The generated response is sent back to the client.
+
+---
+
+# Installation
+
+## Prerequisites
+
+* Linux or macOS
 * `make`
-* A C++ compiler (`c++`, `g++`)
+* C++ compiler (`c++` or `g++`)
 
-### Compilation
-Clone the repository and run `make` at the root directory to compile the executable.
+## Compilation
 
 ```bash
-git clone [your_repository_url]
+git clone <repository_url>
 cd webserv
 make
+```
 
-Execution
+---
 
-The server requires a configuration file to run. If no file is provided, it may fall back to a default configuration (if implemented), but it is highly recommended to specify one.
-Bash
+# Usage
 
-# Run with a specific configuration file
-./webserv conf/def.conf
+Run the server with a configuration file:
 
-Basic Testing
+```bash
+./webserv conf/default.conf
+```
 
-Once the server is running, you can test it using a browser or curl from another terminal:
-Bash
+---
 
-# Simple GET request
+# Testing
+
+### Browser
+
+Open:
+
+```text
+http://localhost:8080
+```
+
+### GET Request
+
+```bash
 curl -i http://localhost:8080/
+```
 
-# Test a specific route or error page
+### Error Page Test
+
+```bash
 curl -i http://localhost:8080/non_existent_page
+```
 
-# Test file upload (POST)
-curl -i -X POST --data-binary "@test.txt" http://localhost:8080/upload/test.txt
+### POST Upload Test
 
-## Useful Resources
+```bash
+curl -i -X POST \
+--data-binary "@test.txt" \
+http://localhost:8080/upload/test.txt
+```
 
-### Networking & Sockets
-- [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html/#client-server-background)
-- [TCP Sockets](https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html)
-- [Blocking vs Non-Blocking Sockets](http://dwise1.net/pgm/sockets/blocking.html)
-- [Non-Blocking I/O with select()](https://www.ibm.com/docs/en/i/7.2.0?topic=designs-example-nonblocking-io-select)
+### DELETE Test
 
-### HTTP
-- [HTTP Requests and Responses Explained](https://codefinity.com/blog/HTTP-Requests-and-Responses-Explained)
-- [C++ Web Programming](https://www.tutorialspoint.com/cplusplus/cpp_web_programming.htm)
+```bash
+curl -i -X DELETE \
+http://localhost:8080/upload/test.txt
+```
 
-### Web Server Development
-- [Building a Simple Server with C++](https://ncona.com/2019/04/building-a-simple-server-with-cpp/)
+---
 
-### CGI
-- [CGI Programming](https://www.tutorialspoint.com/python/python_cgi_programming.htm)
+# References
+
+## Networking & Sockets
+
+* [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html/#client-server-background)
+* [TCP Sockets](https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html)
+* [Blocking vs Non-Blocking Sockets](http://dwise1.net/pgm/sockets/blocking.html)
+* [Non-Blocking I/O with select()](https://www.ibm.com/docs/en/i/7.2.0?topic=designs-example-nonblocking-io-select)
+
+## HTTP
+
+* [HTTP Requests and Responses Explained](https://codefinity.com/blog/HTTP-Requests-and-Responses-Explained)
+* [C++ Web Programming](https://www.tutorialspoint.com/cplusplus/cpp_web_programming.htm)
+
+## Web Server Development
+
+* [Building a Simple Server with C++](https://ncona.com/2019/04/building-a-simple-server-with-cpp/)
+
+## CGI
+
+* [CGI Programming](https://www.tutorialspoint.com/python/python_cgi_programming.htm)
+
+---
+
+## Authors
+
+* **mavissar**
+* **scesar**
