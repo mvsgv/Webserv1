@@ -28,13 +28,17 @@ HTTP consists of requests and responses. When a client (such as a web browser) w
 ![alt text](https://mdn.github.io/shared-assets/images/diagrams/http/messages/http-message-anatomy.svg)
 
 HTTP Request Methods
+
+    GET: A request method that requests only the resource itself, without requesting changes to anything on the server.
+    POST: A method of request to create a new resource by sending data to the server.
+    DELETE: It is a request method to delete a specific data on the server.
+
+HTTP Requests
+
 HTTP requests are made by a client to request an action on a resource identified by a URI (Uniform Resource Identifier). There are several types of HTTP requests, each designed for specific actions:
 
-    GET: Requests data from a specified resource.
-    POST: Submits data to be processed to a specified resource.
-    DELETE: Deletes a specified resource.
-
 HTTP Response Status Codes
+
 HTTP response status codes are issued by a server in response to a client's request made to the server. These codes are divided into five categories:
 1xx: Informational
 
@@ -120,14 +124,14 @@ curl -i http://localhost:8080/non_existent_page
 # Test file upload (POST)
 curl -i -X POST --data-binary "@test.txt" http://localhost:8080/upload/test.txt
 
-Resources
+###Resources
 Documentation & References
 
-        https://ncona.com/2019/04/building-a-simple-server-with-cpp/
-        https://www.tutorialspoint.com/cplusplus/cpp_web_programming.htm
-        https://www.tutorialspoint.com/python/python_cgi_programming.htm
-        https://www.ibm.com/docs/en/i/7.2.0?topic=designs-example-nonblocking-io-select
-        http://dwise1.net/pgm/sockets/blocking.html
-        https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html
-        https://codefinity.com/blog/HTTP-Requests-and-Responses-Explained
-        https://beej.us/guide/bgnet/html/#client-server-background
+[Simple Server with cpp](https://ncona.com/2019/04/building-a-simple-server-with-cpp/)
+[CPP web programming](https://www.tutorialspoint.com/cplusplus/cpp_web_programming.htm)
+[CGI](https://www.tutorialspoint.com/python/python_cgi_programming.htm)
+[Non-Blocking](https://www.ibm.com/docs/en/i/7.2.0?topic=designs-example-nonblocking-io-select)
+(http://dwise1.net/pgm/sockets/blocking.html)
+[TCP Sockets](https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html)
+[Requests/Responses](https://codefinity.com/blog/HTTP-Requests-and-Responses-Explained)
+[Server](https://beej.us/guide/bgnet/html/#client-server-background)
