@@ -124,14 +124,20 @@ curl -i http://localhost:8080/non_existent_page
 # Test file upload (POST)
 curl -i -X POST --data-binary "@test.txt" http://localhost:8080/upload/test.txt
 
-###Resources
-Documentation & References
+## Useful Resources
 
-[Simple Server with cpp](https://ncona.com/2019/04/building-a-simple-server-with-cpp/)
-[CPP web programming](https://www.tutorialspoint.com/cplusplus/cpp_web_programming.htm)
-[CGI](https://www.tutorialspoint.com/python/python_cgi_programming.htm)
-[Non-Blocking](https://www.ibm.com/docs/en/i/7.2.0?topic=designs-example-nonblocking-io-select)
-(http://dwise1.net/pgm/sockets/blocking.html)
-[TCP Sockets](https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html)
-[Requests/Responses](https://codefinity.com/blog/HTTP-Requests-and-Responses-Explained)
-[Server](https://beej.us/guide/bgnet/html/#client-server-background)
+### Networking & Sockets
+- [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html/#client-server-background)
+- [TCP Sockets](https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html)
+- [Blocking vs Non-Blocking Sockets](http://dwise1.net/pgm/sockets/blocking.html)
+- [Non-Blocking I/O with select()](https://www.ibm.com/docs/en/i/7.2.0?topic=designs-example-nonblocking-io-select)
+
+### HTTP
+- [HTTP Requests and Responses Explained](https://codefinity.com/blog/HTTP-Requests-and-Responses-Explained)
+- [C++ Web Programming](https://www.tutorialspoint.com/cplusplus/cpp_web_programming.htm)
+
+### Web Server Development
+- [Building a Simple Server with C++](https://ncona.com/2019/04/building-a-simple-server-with-cpp/)
+
+### CGI
+- [CGI Programming](https://www.tutorialspoint.com/python/python_cgi_programming.htm)
